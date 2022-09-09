@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{%static 'css/chanblock.css'%}">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+
+
+
+
+<script src="{%static 'js/chanblock.js'%}"></script>
+
+<section class="bt-1 bb-1 overflow-xh" data-aos="fade-up">
+    <div class="row"> 
+        <div class="col-12">                           
+            <br>  
+             <!-- Link to open the modal -->
+            <p align="right" class="container">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop">Graph #1</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop1">Graph #2</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop2">Graph #3</button>
+                {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#noBackdrop">Add Graph</button>   {% endcomment %}
+             </p>
+            <!-- Modal HTML addGraphics -->
+            <div id="noBackdrop" class="modal fade" data-backdrop="false" role="dialog" aria-labelledby="exampleModalCenterTitle">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle"> <strong>Add Graphics</strong></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">By metric</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">By crypto</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <br><br>                                        
+                                        <form id="form_gridGraphA" action="addGraphics" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group"> 
+                                                <label for="metric">Metrics</label>                  
+                                                <select class="form-select" data-live-search="true" id="metric" name="metric">
+                                                    {%for metric in variable_coinmetrics%}                                            
+                                                        <option value={{metric.0}} >{{metric.1}}</option>                                              
+                                                    {%endfor%}
+                                                </select>
+                                            </div>                                            
+                                            <br><br>
+                                            <div class="form-group" > 
+                                                <label for="assets">Crypto</label>
+                                                <select class="selectpicker  form-control dropup"  data-dropup-auto="false" multiple  id="assets" name="assets">
+                                                    {%for assets in showcollection %}
+                                                    <option value={{assets}}>{{assets}}</option>
+                                                    {%endfor%}    
+                                                </select>
+                                                <br><br><br><br>
+                                                <br><br>
+                                                
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Graph  by metric</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form>                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <br><br>
+                                        <label for="sel1">Crypto</label>
+                                        <form id="form_gridGraphB" action="addGraphics" method="post">
+                                            {% csrf_token %}
+                                            <select class="form-select" id="assets" name="assets">
+                                                {%for assets in showcollection %}
+                                                <option value={{assets}}>{{assets}}</option>
+                                                {%endfor%} 
+                                            </select>
+                                            <br><br>
+                                            <label for="metric">Metrics</label>
+                                            <select class="selectpicker form-control dropup" data-dropup-auto="false" multiple id="metric" name="metric">
+                                                {%for metric in variable_coinmetrics%}
+                                                <option value={{metric.0}} ><a>{{metric.1|cut:" " }}</a></option>
+                                                {%endfor%}    
+                                            </select>
+                                            <br><br><br><br>
+                                            <br><br>
+                                            <button type="submit" class="btn btn-primary">Graph by Crypto</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form> 
+                                        
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+            <!-- Modal HTML Graph#2 -->
+            <div id="noBackdrop1" class="modal fade" data-backdrop="false" role="dialog" aria-labelledby="exampleModalCenterTitle">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle"> <strong>Add Graphics # 2</strong></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab1" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">By metric</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab1" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false">By crypto</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
+                                        <br><br>                                        
+                                        <form id="form_gridGraph1A" action="gridGraphics" method="post">
+                                            {% csrf_token %}
+                                            <input id="graph" name="graph" type="hidden" value="graph1">
+                                            <div class="form-group"> 
+                                                <label for="metric">Metrics</label>                  
+                                                <select class="form-select" data-live-search="true" id="metric" name="metric">
+                                                    {%for metric in variable_coinmetrics%}                                            
+                                                        <option value={{metric.0}} >{{metric.1}}</option>                                              
+                                                    {%endfor%}
+                                                </select>
+                                            </div>                                            
+                                            <br><br>
+                                            <div class="form-group" > 
+                                                <label for="assets">Crypto</label>
+                                                <select class="selectpicker  form-control dropup"  data-dropup-auto="false" multiple  id="assets" name="assets">
+                                                    {%for assets in showcollection %}
+                                                    <option value={{assets}}>{{assets}}</option>
+                                                    {%endfor%}    
+                                                </select>
+                                                <br><br><br><br>
+                                                <br><br>
+                                                
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Graph  by metric</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form>                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile-tab">
+                                        <br><br>
+                                        <label for="sel1">Crypto</label>
+                                        <form id="form_gridGraph1B" action="gridGraphics" method="post">
+                                            {% csrf_token %}
+                                            <input id="graph" name="graph" type="hidden" value="graph1">
+                                            <select class="form-select" id="assets" name="assets">
+                                                {%for assets in showcollection %}
+                                                <option value={{assets}}>{{assets}}</option>
+                                                {%endfor%} 
+                                            </select>
+                                            <br><br>
+                                            <label for="metric">Metrics</label>
+                                            <select class="selectpicker form-control dropup" data-dropup-auto="false" multiple id="metric" name="metric">
+                                                {%for metric in variable_coinmetrics%}
+                                                <option value={{metric.0}} ><a>{{metric.1|cut:" " }}</a></option>
+                                                {%endfor%}    
+                                            </select>
+                                            <br><br><br><br>
+                                            <br><br>
+                                            <button type="submit" class="btn btn-primary">Graph by Crypto</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form> 
+                                        
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal HTML Graph#3 -->
+            <div id="noBackdrop2" class="modal fade" data-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel"> <strong>Add Graphics # 3</strong></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#home2" role="tab" aria-controls="home2" aria-selected="true">By metric</a>
+                                    </li>
+                                    <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab2" data-toggle="tab" href="#profile2" role="tab" aria-controls="profile2" aria-selected="false">By crypto</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="home2" role="tabpanel" aria-labelledby="home-tab2">
+                                        <br><br>
+                                        
+                                        <form id="form_gridGraph2A" action="gridGraphics2" method="post">
+                                            {% csrf_token %}
+                                            <input id="graph" name="graph" type="hidden" value="graph2">
+                                            <div class="form-group"> 
+                                                <label for="metric">Metrics</label>                  
+                                                <select class="form-select" data-live-search="true" id="metric" name="metric">
+                                                    {%for metric in variable_coinmetrics%}                                            
+                                                        <option value={{metric.0}} >{{metric.1}}</option>                                              
+                                                    {%endfor%}
+                                                </select>
+                                            </div>                                            
+                                            <br><br>
+                                            <div class="form-group" > 
+                                                <label for="assets">Crypto</label>
+                                                <select class="selectpicker  form-control dropup"  data-dropup-auto="false" multiple  id="assets" name="assets">
+                                                    {%for assets in showcollection %}
+                                                    <option value={{assets}}>{{assets}}</option>
+                                                    {%endfor%}    
+                                                </select>
+                                                <br><br><br><br>
+                                                <br><br>
+                                                
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Graph  by metric</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form>
+
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="profile2" role="tabpanel" aria-labelledby="profile-tab">
+                                        <br><br>
+                                        <label for="sel1">Crypto</label>
+                                        <form id="form_gridGraph2B" action="gridGraphics2" method="post">                    
+                                            {% csrf_token %}
+                                            <input id="graph" name="graph" type="hidden" value="graph2">
+                                            <select class="form-select" id="assets" name="assets">
+                                                {%for assets in showcollection %}
+                                                <option value={{assets}}>{{assets}}</option>
+                                                {%endfor%} 
+                                            </select>
+                                            <br><br>
+                                            <label for="metric">Metrics</label>
+                                            <select class="selectpicker form-control dropup" data-dropup-auto="false" multiple id="metric" name="metric">
+                                                {%for metric in variable_coinmetrics%}
+                                                <option value={{metric.0}} ><a>{{metric.1|cut:" " }}</a></option>
+                                                {%endfor%}    
+                                            </select>
+                                            <br><br><br><br>
+                                            <br><br>
+                                            <button type="submit" class="btn btn-primary">Graph by Crypto</button>&nbsp&nbsp<button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                        </form> 
+                                        
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+             <br>
+
+             <h1 align="center" class="container">Graph # 1</h1>
+                <div id="plot-content" class="container">  
+                    {{div|safe}}
+                    {{script|safe}} 
+                
+                </div>
+                <div class="col-lg-12 col-md-12 container" align="right">
+                    <button id="show-hide_comment" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
+                </div>
+                <br>
+                <div id="inputTextGraph1" class="container" style="display: none"> 
+                    <input id="checked"  type="hidden" value="1" name="idioma">                      
+                        <div class="form-floating">                                  
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2"><strong>Graph # 1. Comments:</strong></label>
+                        </div>                    
+                        <br>                                                   
+                </div>
+                
+                <h1 id="title2" align="center" class="container" style="display: none">Graph # 2</h1>
+                <div id="plot-content1" class="container">                       
+                        {{div1|safe}}
+                        {{script1|safe}}
+
+                    
+                </div>
+                <div id="btnComment2" class="col-lg-12 col-md-12 container" align="right" style="display: none">
+                    <button id="show-hide_comment2" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
+                    
+                </div>
+                <div id="inputTextGraph2" class="container" style="display: none"> 
+                    <br>                                          
+                        <div class="form-floating">                 
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2"><strong>Graph # 2. Comments:</strong></label>
+                        </div>                       
+                        <br>
+                </div>
+                <h1 id="title3" align="center" class="container" style="display: none">Graph # 3</h1>
+                <div id="plot-content2" class="container">                       
+                        {{div2|safe}}
+                        {{script2|safe}}
+                    
+                </div> 
+                <div id="btnComment3" class="col-lg-12 col-md-12 container" align="right" style="display: none">
+                    <button id="show-hide_comment3" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
+                    
+                </div>
+               
+                <div id="inputTextGraph3"class="container" style="display: none">                        
+                    <br>
+                        <div class="form-floating">                 
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2"><strong>Graph # 3. Comments:</strong></label>
+                        </div>
+                        <br>                   
+                </div>
+            
+            <br>  
+           
+
+           
+        
+ 
+</div>
+</section>
+
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.0.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.0.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.0.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-2.4.0.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-2.4.0.min.js"
+        crossorigin="anonymous"></script>
+
+        <script >
+                $("#form_gridGraphA").submit(function(e) {
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                
+                    var form = $(this);
+                    var actionUrl = form.attr('action');
+                    //alert(actionUrl);
+                    $.ajax({
+                        type: "POST",
+                        url: actionUrl,
+                        data: form.serialize(), // serializes the form's elements.
+                        success: function(data)
+                        {
+                        //alert('success'); // show response from the php script.
+                        $('#plot-content').html(data)                          
+                        $("#noBackdrop .btn-close").click()
+                                                            
+                        }
+                    }); 
+                    
+                });
+                $("#form_gridGraphB").submit(function(e) {
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                
+                    var form = $(this);
+                    var actionUrl = form.attr('action');
+                    //alert(actionUrl);
+                    $.ajax({
+                        type: "POST",
+                        url: actionUrl,
+                        data: form.serialize(), // serializes the form's elements.
+                        success: function(data)
+                        {
+                        // show response from the php script.
+                        $('#plot-content').html(data)                          
+                        $("#noBackdrop .btn-close").click()
+                                                            
+                        }
+                    }); 
+                    
+                });
+                $("#form_gridGraph1A").submit(function(e) {
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                
+                    var form = $(this);
+                    var actionUrl = form.attr('action');
+                    //alert(actionUrl);
+                    $.ajax({
+                        type: "POST",
+                        url: actionUrl,
+                        data: form.serialize(), // serializes the form's elements.
+                        success: function(data)
+                        {
+                          //alert('success'); // show response from the php script.
+                          $('#plot-content1').html(data)                          
+                          $("#noBackdrop1 .btn-close").click()
+                          $("#title2").css("display","block");
+                          $("#btnComment2").css("display","block");
+                        
+                     
+                        }
+                    }); 
+                    
+                });
+                $("#form_gridGraph1B").submit(function(e) {
+                    // alert('data');
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                 
+                    var form = $(this);
+                    var actionUrl = form.attr('action');
+                    //alert(actionUrl);
+                    $.ajax({
+                         type: "POST",
+                         url: actionUrl,
+                         data: form.serialize(), // serializes the form's elements.
+                         success: function(data)
+                        {
+                           //alert('success'); // show response from the php script.
+                           $('#plot-content1').html(data)                          
+                           $("#noBackdrop1 .btn-close").click()
+                           $("#title2").css("display","block");
+                           $("#btnComment2").css("display","block");
+                        }
+                    }); 
+                     
+                });		        
+                $("#form_gridGraph2A").submit(function(e) {
+                    // alert('data');
+                     e.preventDefault(); // avoid to execute the actual submit of the form.
+                 
+                     var form = $(this);
+                     var actionUrl = form.attr('action');
+                     //alert(actionUrl);
+                     $.ajax({
+                         type: "POST",
+                         url: actionUrl,
+                         data: form.serialize(), // serializes the form's elements.
+                         success: function(data)
+                         {
+                           //alert('success'); // show response from the php script.
+                           $('#plot-content2').html(data);                          
+                           $("#noBackdrop2 .btn-close").click();
+                           $("#title3").css("display","block");
+                           $("#btnComment3").css("display","block");
+                         }
+                     }); 
+                     
+                });
+                $("#form_gridGraph2B").submit(function(e) {
+                     e.preventDefault(); // avoid to execute the actual submit of the form.
+                 
+                     var form = $(this);
+                     var actionUrl = form.attr('action');
+                     //alert(actionUrl);
+                    $.ajax({
+                         type: "POST",
+                         url: actionUrl,
+                         data: form.serialize(), // serializes the form's elements.
+                         success: function(data)
+                         {
+                            // show response from the php script.
+                           $('#plot-content2').html(data);                          
+                           $("#noBackdrop2 .btn-close").click();
+                           $("#title3").css("display","block");
+                           $("#btnComment3").css("display","block");
+                         }
+                    }); 
+                     
+                });
+                
+                $("#show-hide_comment").click(function() {
+                    var checked= $('#checked').val()
+                    if (checked == '1') {
+                        $("#inputTextGraph1").css("display","block");
+                        $('#checked').val("0")
+                        $("#show-hide_comment").html('Hide comment');
+                    }else{
+                        $("#inputTextGraph1").css("display","none");
+                        $('#checked').val("1")
+                        $("#show-hide_comment").html('Add comment');
+                    }                                          
+                }); 
+
+                $("#show-hide_comment2").click(function() {
+                    var checked= $('#checked').val()
+                    if (checked == '1') {
+                        $("#inputTextGraph2").css("display","block");
+                        $('#checked').val("0")
+                        $("#show-hide_comment2").html('Hide comment');
+                    }else{
+                        $("#inputTextGraph2").css("display","none");
+                        $('#checked').val("1")
+                        $("#show-hide_comment2").html('Add comment');
+                    }                                          
+                });
+
+                $("#show-hide_comment3").click(function() {
+                    var checked= $('#checked').val()
+                    if (checked == '1') {
+                        $("#inputTextGraph3").css("display","block");
+                        $('#checked').val("0")
+                        $("#show-hide_comment3").html('Hide comment');
+                    }else{
+                        $("#inputTextGraph3").css("display","none");
+                        $('#checked').val("1")
+                        $("#show-hide_comment3").html('Add comment');
+                    }                                          
+                });
+
+
+        
+        
+        </script>
+
+{%endblock%}
