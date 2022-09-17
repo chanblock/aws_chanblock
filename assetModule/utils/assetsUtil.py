@@ -1,8 +1,10 @@
 
+from array import array
 import csv
 from django.utils.html import strip_tags
 from pymongo import MongoClient
 from datetime import datetime
+import json
 #GRAPH 
 from bokeh.embed import components
 from bokeh.layouts import layout
@@ -178,6 +180,7 @@ def coin_detail(symbol):
     coin_detail={'asset': listMetric,'profile': profile_detail}  
    
     return coin_detail
+    
 def format_date(roadmap):
     for iterator in roadmap:
         aux = iterator['date'] 
@@ -187,18 +190,10 @@ def format_date(roadmap):
     
     return roadmap
 
-
 def list_variable():
     list_variable=[]
     dir_file="static/VARIABLESCOINMETRICS.csv"
-    dir_file1="static/metrics_name.csv"
-    
-    # with open(dir_file1) as File:
-    #     reader = csv.reader(File, delimiter=',', quotechar=',',
-    #                     quoting=csv.QUOTE_MINIMAL)  
-    #     for variable in reader:
-    #         print(variable[0].split(';'))            
-            
+    dir_file1="static/metrics_name.csv"          
     with open(dir_file1) as File:
         reader = csv.reader(File, delimiter=',', quotechar=',',
                         quoting=csv.QUOTE_MINIMAL)
@@ -220,6 +215,7 @@ def  graph(symbol):
         getvalues= list(client.coinmetrics[symbol].find({"PriceUSD":{"$exists":True}},{"_id":0, "time":1,"PriceUSD":1}).sort("time",1))        
         listXY.append(getvalues)
         modelSymbol.append(symbol)
+        
         #print(listXY)
     if type(symbol) != str:
         isArray = True
@@ -338,17 +334,34 @@ def  graph(symbol):
             max_width=1450,        
         )
         script, div = components(layout1)
-    
+
         #LIST CRYPTO COINMETRIC
         variable_coinmetrics= list_variable()
         showCollection= client.coinmetrics.list_collection_names()
+        #data to save in the comment
+        
+        if type(symbol)== str:
+            aux=symbol
+            symbol={}
+            symbol['metric']=["PriceUSD"]
+            print('desde if graph methodqq',symbol['metric'])
+            symbol['assets']=[aux]
+        if type(symbol)!=str:
+            aux=symbol
+            symbol={}
+            symbol['metric']=aux['metric']
+            symbol['assets']=aux['assets']
+            print('desde graph method********',aux['assets'])
+        print('desde graph methodqq',symbol)
+        
         context= {
-        'script': script,
-        'div':div,
         'showcollection': showCollection,
         'variable_coinmetrics':variable_coinmetrics,
         'message': unmetric,
-        'exist_plot':True
+        'exist_plot':True,
+        'script': script,
+        'div':div,
+        'datagraph1':str(symbol)
         }              
     else:
         context = {
@@ -474,17 +487,25 @@ def grid_graph(symbol):
             )
         script, div = components(layout1)
 
+        #to save data of graph in comment
+        aux=symbol
+        aux.pop('csrfmiddlewaretoken')
+       
+
+
         print(symbol['graph'][0])
         if symbol['graph'][0]=='graph1':
             context= {
             'script1': script,
             'div1':div,
+            'datagraph1':json.dumps(aux)
         
             }
         if symbol['graph'][0]=='graph2':
             context= {
             'script2': script,
             'div2':div,
+            'datagraph2':json.dumps(aux)
         
             }
                       

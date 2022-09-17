@@ -11,23 +11,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-
-
-
-
 <script src="{%static 'js/chanblock.js'%}"></script>
 
 <section class="bt-1 bb-1 overflow-xh" data-aos="fade-up">
     <div class="row"> 
-        <div class="col-12">                           
+        <div class="col-12"> 
+                                     
             <br>  
              <!-- Link to open the modal -->
             <p align="right" class="container">
+                {% comment %} {% if user.is_authenticated %}
+
+                <a href="{% url 'comments_history' %}" type="button"  class="btn btn-sm" >History</a>
+                {%endif%}  {% endcomment %}
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop">Graph #1</button>
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop1">Graph #2</button>
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#noBackdrop2">Graph #3</button>
-                {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#noBackdrop">Add Graph</button>   {% endcomment %}
-             </p>
+         
+            </p>
             <!-- Modal HTML addGraphics -->
             <div id="noBackdrop" class="modal fade" data-backdrop="false" role="dialog" aria-labelledby="exampleModalCenterTitle">
                 <div class="modal-dialog" role="document">
@@ -267,73 +268,81 @@
                     </div>
                 </div>
             </div>
-             <br>
+            <br>
 
-             <h1 align="center" class="container">Graph # 1</h1>
-                <div id="plot-content" class="container">  
+            <form id="add_comment" action="{% url 'comments'%}" method="post">                        
+                <!-- Graph #1 -->
+                {% csrf_token %}
+                <h1 align="center" class="container">Graph # 1</h1>              
+                <div id="plot-content" class="container">              
                     {{div|safe}}
-                    {{script|safe}} 
-                
+                    {{script|safe}}                     
                 </div>
                 <div class="col-lg-12 col-md-12 container" align="right">
                     <button id="show-hide_comment" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
                 </div>
                 <br>
+                <!--comment Graph #1 -->
                 <div id="inputTextGraph1" class="container" style="display: none"> 
-                    <input id="checked"  type="hidden" value="1" name="idioma">                      
+                    <input id="checked1"  type="hidden" value="1">
+                    <input  id="dataGraph1" name="dataGraph1"  type="hidden" value='{{datagraph1}}'> 
+                    <input id="id" name="id"  type="hidden" value='{{user.id}}'>                    
                         <div class="form-floating">                                  
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                            <label for="floatingTextarea2"><strong>Graph # 1. Comments:</strong></label>
+                            <textarea class="form-control"  id="comment_graph1" name="comment_graph1"style="height: 100px"></textarea>
+                            <label for="comment_graph1"><strong>Graph # 1. Comments:</strong></label>
                         </div>                    
-                        <br>                                                   
+                    <br>                                                   
                 </div>
-                
+                <!-- Graph #2 -->  
                 <h1 id="title2" align="center" class="container" style="display: none">Graph # 2</h1>
+                
                 <div id="plot-content1" class="container">                       
-                        {{div1|safe}}
-                        {{script1|safe}}
-
-                    
+                    {{div1|safe}}
+                    {{script1|safe}}               
                 </div>
                 <div id="btnComment2" class="col-lg-12 col-md-12 container" align="right" style="display: none">
-                    <button id="show-hide_comment2" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
-                    
+                    <button id="show-hide_comment2" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>                     
                 </div>
-                <div id="inputTextGraph2" class="container" style="display: none"> 
-                    <br>                                          
-                        <div class="form-floating">                 
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                            <label for="floatingTextarea2"><strong>Graph # 2. Comments:</strong></label>
-                        </div>                       
-                        <br>
+                <!--comment Graph #2 -->
+                <div id="inputTextGraph2" class="container" style="display: none">                    
+                    <br> 
+                    <input id="checked2"  type="hidden" value="1"> 
+                    <input id="dataGraph2" name="dataGraph2" type="hidden" value=''>                                         
+                    <div class="form-floating">                 
+                        <textarea class="form-control"  id="comment_graph2" name="comment_graph2" style="height: 100px"></textarea>
+                        <label for="comment_graph2"><strong>Graph # 2. Comments:</strong></label>
+                    </div>                       
+                    <br>
                 </div>
+                <!-- Graph #3 --> 
                 <h1 id="title3" align="center" class="container" style="display: none">Graph # 3</h1>
-                <div id="plot-content2" class="container">                       
-                        {{div2|safe}}
-                        {{script2|safe}}
-                    
-                </div> 
-                <div id="btnComment3" class="col-lg-12 col-md-12 container" align="right" style="display: none">
-                    <button id="show-hide_comment3" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>  
-                    
+                <div id="plot-content2" class="container">                                          
+                    {{div2|safe}}
+                    {{script2|safe}}                    
                 </div>
-               
+                <div id="btnComment3" class="col-lg-12 col-md-12 container" align="right" style="display: none">
+                    <button id="show-hide_comment3" type="button" class="btn btn-secondary btn-sm" data-bs-toggle="button" autocomplete="off">Add comment</button>                      
+                </div>
+                <!--comment Graph #3 -->   
                 <div id="inputTextGraph3"class="container" style="display: none">                        
                     <br>
-                        <div class="form-floating">                 
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                            <label for="floatingTextarea2"><strong>Graph # 3. Comments:</strong></label>
-                        </div>
-                        <br>                   
+                    <input id="checked3"  type="hidden" value="1">
+                    <input  type="hidden" id="dataGraph3" name="dataGraph3"  value={{dataGraph3}}>
+                    <div class="form-floating">                 
+                        <textarea class="form-control"  id="comment_graph3" name="comment_graph3" style="height: 100px"></textarea>
+                        <label for="comment_graph3"><strong>Graph # 3. Comments:</strong></label>
+                    </div>
+                    <br>                   
                 </div>
-            
+                <br>
+                {% comment %} <div class="col-lg-12 col-md-12 container" align="right">
+                    <button class="btn" type="submit" >Save comment(s)</button>
+                </div> {% endcomment %}
+            </form>
             <br>  
            
-
-           
-        
- 
-</div>
+        </div> 
+    </div>
 </section>
 
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.0.min.js"
@@ -347,47 +356,61 @@
 <script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-2.4.0.min.js"
         crossorigin="anonymous"></script>
 
-        <script >
-                $("#form_gridGraphA").submit(function(e) {
-                    e.preventDefault(); // avoid to execute the actual submit of the form.
+<script >
+    $("#form_gridGraphA").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
                 
-                    var form = $(this);
-                    var actionUrl = form.attr('action');
-                    //alert(actionUrl);
-                    $.ajax({
-                        type: "POST",
-                        url: actionUrl,
-                        data: form.serialize(), // serializes the form's elements.
-                        success: function(data)
-                        {
-                        //alert('success'); // show response from the php script.
-                        $('#plot-content').html(data)                          
-                        $("#noBackdrop .btn-close").click()
-                                                            
-                        }
-                    }); 
-                    
-                });
-                $("#form_gridGraphB").submit(function(e) {
-                    e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        var actionUrl = form.attr('action');
+         //alert(actionUrl);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                //console.log(data); // show response from the php script.
+                indiceStartBokeh=data.indexOf("<script");
+                indiceEndBokeh=data.indexOf("</div>");
+                index= indiceEndBokeh + 6;
+                $('#plot-content').html(data.substring(indiceStartBokeh,indiceEndBokeh))                          
+                $("#noBackdrop .btn-close").click()
+                console.log(data.substring(index));
+                variableSymbol= data.substring(index);
+                $('#dataGraph1').val(variableSymbol)
                 
-                    var form = $(this);
-                    var actionUrl = form.attr('action');
-                    //alert(actionUrl);
-                    $.ajax({
-                        type: "POST",
-                        url: actionUrl,
-                        data: form.serialize(), // serializes the form's elements.
-                        success: function(data)
-                        {
-                        // show response from the php script.
-                        $('#plot-content').html(data)                          
-                        $("#noBackdrop .btn-close").click()
+                
                                                             
-                        }
-                    }); 
+            }
+        }); 
                     
-                });
+    });
+    $("#form_gridGraphB").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+                
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        //alert(actionUrl);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+             success: function(data)
+            {
+                // show response from the php script.
+                indiceStartBokeh=data.indexOf("<script");
+                indiceEndBokeh=data.indexOf("</div>");
+                index= indiceEndBokeh + 6;
+                $('#plot-content').html(data.substring(indiceStartBokeh,indiceEndBokeh))                          
+                $("#noBackdrop .btn-close").click()
+                console.log(data.substring(index));
+                variableSymbol= data.substring(index);
+                $('#dataGraph1').val(variableSymbol)
+                                                            
+            }
+        }); 
+                    
+    });
                 $("#form_gridGraph1A").submit(function(e) {
                     e.preventDefault(); // avoid to execute the actual submit of the form.
                 
@@ -398,10 +421,16 @@
                         type: "POST",
                         url: actionUrl,
                         data: form.serialize(), // serializes the form's elements.
+                        
                         success: function(data)
                         {
-                          //alert('success'); // show response from the php script.
-                          $('#plot-content1').html(data)                          
+                            indice = data.indexOf("</div>");
+                            index= indice + 6;
+                            variableSymbol= data.substring(index);
+                            console.log(data.substring(index));
+                           // show response
+                          $('#dataGraph2').val(variableSymbol)
+                          $('#plot-content1').html(data.substring(0,index))                                                   
                           $("#noBackdrop1 .btn-close").click()
                           $("#title2").css("display","block");
                           $("#btnComment2").css("display","block");
@@ -413,8 +442,7 @@
                 });
                 $("#form_gridGraph1B").submit(function(e) {
                     // alert('data');
-                    e.preventDefault(); // avoid to execute the actual submit of the form.
-                 
+                    e.preventDefault(); // avoid to execute the actual submit of the form.                 
                     var form = $(this);
                     var actionUrl = form.attr('action');
                     //alert(actionUrl);
@@ -425,10 +453,15 @@
                          success: function(data)
                         {
                            //alert('success'); // show response from the php script.
-                           $('#plot-content1').html(data)                          
+                            indice = data.indexOf("</div>");
+                            index= indice + 6;
+                            variableSymbol= data.substring(index);
+                           $('#plot-content1').html(data.substring(0,index))                          
                            $("#noBackdrop1 .btn-close").click()
                            $("#title2").css("display","block");
                            $("#btnComment2").css("display","block");
+                           $('#dataGraph2').val(variableSymbol)
+                           
                         }
                     }); 
                      
@@ -447,10 +480,14 @@
                          success: function(data)
                          {
                            //alert('success'); // show response from the php script.
-                           $('#plot-content2').html(data);                          
+                            indice = data.indexOf("</div>");
+                            index= indice + 6;
+                            variableSymbol= data.substring(index);
+                           $('#plot-content2').html(data.substring(0,index));                          
                            $("#noBackdrop2 .btn-close").click();
                            $("#title3").css("display","block");
                            $("#btnComment3").css("display","block");
+                           $('#dataGraph3').val(variableSymbol)
                          }
                      }); 
                      
@@ -468,54 +505,57 @@
                          success: function(data)
                          {
                             // show response from the php script.
-                           $('#plot-content2').html(data);                          
+                            indice = data.indexOf("</div>");
+                            index= indice + 6;
+                            variableSymbol= data.substring(index);
+                           $('#plot-content2').html(data.substring(0,index));                          
                            $("#noBackdrop2 .btn-close").click();
                            $("#title3").css("display","block");
                            $("#btnComment3").css("display","block");
+                           $('#dataGraph3').val(variableSymbol)
                          }
                     }); 
                      
                 });
                 
                 $("#show-hide_comment").click(function() {
-                    var checked= $('#checked').val()
+                    var checked= $('#checked1').val()
                     if (checked == '1') {
                         $("#inputTextGraph1").css("display","block");
-                        $('#checked').val("0")
+                        $('#checked1').val("0")
                         $("#show-hide_comment").html('Hide comment');
                     }else{
                         $("#inputTextGraph1").css("display","none");
-                        $('#checked').val("1")
+                        $('#checked1').val("1")
                         $("#show-hide_comment").html('Add comment');
                     }                                          
                 }); 
 
                 $("#show-hide_comment2").click(function() {
-                    var checked= $('#checked').val()
+                    var checked= $('#checked2').val()
                     if (checked == '1') {
                         $("#inputTextGraph2").css("display","block");
-                        $('#checked').val("0")
+                        $('#checked2').val("0")
                         $("#show-hide_comment2").html('Hide comment');
                     }else{
                         $("#inputTextGraph2").css("display","none");
-                        $('#checked').val("1")
+                        $('#checked2').val("1")
                         $("#show-hide_comment2").html('Add comment');
                     }                                          
                 });
 
                 $("#show-hide_comment3").click(function() {
-                    var checked= $('#checked').val()
+                    var checked= $('#checked3').val()
                     if (checked == '1') {
                         $("#inputTextGraph3").css("display","block");
-                        $('#checked').val("0")
+                        $('#checked3').val("0")
                         $("#show-hide_comment3").html('Hide comment');
                     }else{
                         $("#inputTextGraph3").css("display","none");
-                        $('#checked').val("1")
+                        $('#checked3').val("1")
                         $("#show-hide_comment3").html('Add comment');
                     }                                          
                 });
-
 
         
         
