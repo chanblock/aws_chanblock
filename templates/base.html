@@ -46,22 +46,56 @@
 			<ul class="menu">				
 				<li>
 					<a href="/">Home</a>
-				</li>				
+				</li>
+				<li class="dropdown">
+					<a href="#">Services</a>
+					<ul class="dropdown-menu">
+						<li><a href="{% url 'services' %}">ANALYSIS</a></li>
+						<li><a href="{% url 'regulation' %}">REGULATION</a></li>
+						<li><a href="{% url 'education' %}">EDUCATION</a></li>
+						<li><a href="{% url 'monitoring' %}">MONITORING</a></li>						
+					</ul>
+				</li>					
 				<li>
-					<a href="/indicators">Indicators</a>
+					<a href="{% url 'indicators' %}">Indicators</a>
 				</li>				
 				<li >
-					<a href="/graphics">Graphics</a>																			
-				</li>				
-				<li><a href="/form_register_email" class="px-10 pt-15 pb-10">
-					<div class="btn btn-primary py-5">Register Now</div></a>
+					<a href="{% url 'graph_default'%}">Graphics</a>																			
 				</li>
+				<li >
+					<a href="{% url 'monitorMtGox'%}">Mt.Gox</a>																			
+				</li>				
+				
+				{% if user.is_authenticated %}
+				<li class="dropdown">
+					<a href="#">{{user.username}}</a>
+					<ul class="dropdown-menu">
+						<li><a href="{% url 'manteniance' %}">Profile</a>
+						</li>
+						<li><a href="{% url 'manteniance' %}">Change E-mail</a>
+						</li>						
+						<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+					</ul>
+				</li>
+				{% else %}
+				<li class="dropdown">
+					<a href="#">Log in</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="{% url 'account_login' %}">Sign In</a>
+						</li>
+						<li><a href="{% url 'account_signup' %}">Sign Up</a>
+						</li>
+					</ul>
+				</li>
+				
+				{% endif %}
+
 			</ul>
 		
 		</nav>
 	</header>
 	<div class="body-section " style="min-height:700px">
-		
 		{% block content %}{% endblock content %}
 	</div>
 	<footer class="footer_three">

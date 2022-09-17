@@ -44,8 +44,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user',
+    'corporate',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'crispy_forms'
     
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,9 +93,16 @@ WSGI_APPLICATION = 'chanblockweb.wsgi.application'
 
 DATABASES = {
        'default': {
-           'ENGINE': 'djongo',
-           'NAME': 'chanblock',
-       }
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env('DB_NAME'),
+            'USER':env('DB_USERNAME'),
+            'PASSWORD':env('DB_PASSWORD_USERNAME'),
+            'PORT':'3306',
+            'HOST':env('DB_HOST'),
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+             
+
+    }
 }
 
 
@@ -132,4 +149,22 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+AUTHENTICATION_BACKENDS = [
+   
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
 
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+   
+]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_AUTHENTICATION_METHOD='email'
+ACCOUNT_EMAIL_REQUIRED='true'
+# ACCOUNT_EMAIL_VERIFICATION='mandatory'
+ACCOUNT_LOGOUT_ON_GET="true"
+LOGIN_REDIRECT_URL = '/'
+# template to the forms of authentication all_auth
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -7,9 +7,7 @@ from django.contrib import messages
 
 
 def home(request):
-  context= assetsUtil.home()
-  
-  return render(request, 'home.html',context)
+  return render(request, 'services/home.html')
 
 def maintenance(request):  
   return render(request, 'maintenance.html')
@@ -43,7 +41,7 @@ def coin_detail(request,symbol):
 
 def graph_default(request):
   context= assetsUtil.graph('btc')
-  print('context view.graficos: ',context['div'])
+  print('context view.graficos: ',context.keys())
   return render(request, 'assets/graphics.html', context)
   
 def graphics(request):
@@ -61,18 +59,21 @@ def graphics(request):
       return render(request, 'graphics.html', context)
     else:
       return redirect('graph_default')  
-  # return render(request, 'graphics.html', context)
-  # return render({context.get('div'),context.get('script')})
-  return HttpResponse({context.get('div'),context.get('script')})
+  print('--++++++++++',context.keys())
+  return HttpResponse(context.values())
 
 def gridGraphics(request):
   myDict = dict(request.POST)
-  print('dict of gridgraph',myDict)
+  print('dict of gridgraph1',myDict)
   context= assetsUtil.grid_graph(myDict)
-  return HttpResponse({context.get('div1'),context.get('script1')})
+  print('key para graph 2',context.keys())
+  return HttpResponse(context.values())
+  # return HttpResponse({context.get('div1'),context.get('script1'),context.get('dataGraph1')})
 
 def gridGraphics2(request):
   myDict = dict(request.POST)
   print('dict of gridgraph2',myDict)
   context= assetsUtil.grid_graph(myDict)
-  return HttpResponse({context.get('div2'),context.get('script2')})
+  print('key para graph 3',context.keys())
+  return HttpResponse(context.values())
+  # return HttpResponse({context.get('div2'),context.get('script2'),context.get('dataGraph2')})

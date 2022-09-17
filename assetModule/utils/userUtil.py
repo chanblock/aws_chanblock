@@ -1,7 +1,7 @@
 from pickle import TRUE
 import smtplib
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime,date
 
 from django.contrib import messages
 from chanblockweb.settings.base import env
@@ -29,20 +29,13 @@ def register_email(request):
     values.pop('csrfmiddlewaretoken')
     emaildb= list(db.find({'email': values['email']}))
     if emaildb:
-
-        messages.error(request,"You email exist")
-        
+        messages.error(request,"You email exist")      
     else:
         db.insert_one(values)
         messages.success(request,"You email registered successfully")
         cofirm_register(values['email'])
         return TRUE
       
-
-
-
-
-
 def cofirm_register(email):
     message = 'Your email has been successfully registered. We will be communicating the latest news from MTgox'
     subject = 'Chanblock: mail registration successful'
@@ -58,3 +51,34 @@ def cofirm_register(email):
     server.quit()
 
     print("Correo enviado exitosamente!")
+
+def user_comment(myDict):
+    myDict.pop('csrfmiddlewaretoken')
+    comment={}
+    for value in myDict:
+        print( value,'-----',len(myDict[value][0]))
+        comment['user_id']=myDict['id'][0]
+        if len(myDict['dataGraph1'][0])!=0:
+         comment['dataGraph1']=myDict['dataGraph1'][0]
+        if len(myDict['comment_graph1'][0])!=0:
+            comment['commentGraph1']= myDict['comment_graph1'][0]
+        if len(myDict['dataGraph2'][0])!=0:
+             comment['dataGraph2']=myDict['dataGraph2'][0]
+        if len(myDict['comment_graph2'][0])!=0:
+            comment['commentGraph2']= myDict['comment_graph2'][0]
+        if len(myDict['dataGraph3'][0])!=0: 
+            comment['dataGraph3']=myDict['dataGraph3'][0]
+        if len(myDict['comment_graph3'][0])!=0:
+            comment['commentGraph3']= myDict['comment_graph3'][0]
+    
+    today = datetime.now()
+    comment['date']=today
+    for val in comment:
+        print((comment[val]))
+    db = client.chancblock.user_graph
+    
+    try:
+        db.insert_one(comment)
+        return True
+    except:
+        return False
